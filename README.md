@@ -13,7 +13,7 @@ This is really designed to implement remotely-triggered black hole functionality
 ## Setup on this box
 
 * Put this repo in /opt/postgres2bgp and make a new Python3 virtual environment in /opt/postgres2bgp/venv
-* `source /opt/postgres2bgp/venv`
+* `source /opt/postgres2bgp/venv/bin/activate`
 * `pip install -r /opt/postgres2bgp/requirements.txt`
 * Add this to your exabgp config.
 
@@ -69,4 +69,8 @@ router bgp 64824
   neighbor 146.229.0.0 activate
  exit-address-family
 !
+
+## Read these tips
+
+* If you write to the table and then run "NOTIFY ip_list_updated;" then this app will immediately update the ExaBGP RIB, you don't have to wait for a timeout or anything.
 

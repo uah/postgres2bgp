@@ -5,6 +5,7 @@ import json
 import psycopg2
 import time
 import netaddr
+import pgpubsub
 
 def eprint(*args, **kwargs):
     print("[postgres2bgp]", *args, file=sys.stderr, **kwargs)
@@ -14,10 +15,16 @@ with open("/usr/local/etc/postgres2bgp.config.json", 'r') as _:
 
 eprint("Config loaded.")
 
-with psycopg2.connect("dbname='{}' user='{}' host='{}' password='{}'".format(config['db_name'], config['db_user'], config['db_host'], config['db_pass'])) as conn:
-    cursor = conn.cursor()
+conn_string = "dbname='{}' user='{}' host='{}' password='{}'".format(config['db_name'], config['db_user'], config['db_host'], config['db_pass'])
 
+with psycopg2.connect(conn_string) as conn:
+    conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+    cursor = conn.cursor()
 eprint("Connected to database on", config['db_host'])
+
+pubsub = pgpubsub.connect(conn_string)
+pubsub.listen('ip_list_updated')
+eprint("Connected to Postgres event notification subsystem")
 
 prefixes_loaded = []
 
@@ -49,4 +56,12 @@ while True:
     eprint("updates have been sent to exabgp.")
     prefixes_loaded = prefixes_to_load
 
-    time.sleep(15*60) #It's only going to be like this til we have subscriptions
+    #We are done, so let's wait for a notification.
+    #We will wait a max of an hour, and then just update anyway (even if it will be a no-op).
+    if next(pubsub.events(yield_timeouts=True, select_timeout=(60*60))) is None:
+        eprint("No notification received in a while; doing a patrol update.")
+    else:
+        eprint("Got notification that a list had been updated, doing a normal update.")
+
+
+
