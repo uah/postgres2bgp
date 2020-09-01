@@ -58,9 +58,9 @@ route-map RTBH permit 10
 route-map NOTHING deny 10
  description deny everything
 !
-router bgp 4242420824
+router bgp 64824
  !iBGP peering to the server
- neighbor 146.229.0.0 remote-as 4242420824
+ neighbor 146.229.0.0 remote-as 64824
  neighbor 146.229.0.0 description ExaBGP-server
  address-family ipv4
   neighbor 146.229.0.0 soft-reconfiguration inbound
