@@ -69,6 +69,7 @@ router bgp 64824
   neighbor 146.229.0.0 activate
  exit-address-family
 !
+```
 
 ## Read these tips
 
