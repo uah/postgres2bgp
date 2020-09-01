@@ -50,10 +50,10 @@ interface InternetFacingInterface1/2
  ip verify unicast source reachable-via any allow-default
 !
 ip community-list standard BLACKHOLE permit 64824:666
-ip route 192.18.66.66 255.255.255.255 Null0
+ip route 198.18.66.66 255.255.255.255 Null0
 route-map RTBH permit 10
  match community BLACKHOLE
- set ip next-hop 192.18.66.66
+ set ip next-hop 198.18.66.66
 !
 route-map NOTHING deny 10
  description deny everything

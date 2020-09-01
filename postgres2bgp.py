@@ -46,11 +46,11 @@ while True:
     eprint("Going to announce", len(prefixes_to_announce), "prefixes and withdraw", len(prefixes_to_withdraw), "prefixes")
 
     for prefix in prefixes_to_announce:
-        cmd = "announce route {} next-hop 192.18.66.66 community [no-export {}:{}]".format(prefix, config['asn'], config['bh_community'])
+        cmd = "announce route {} next-hop 198.18.66.66 community [no-export {}:{}]".format(prefix, config['asn'], config['bh_community'])
         print(cmd)
         
     for prefix in prefixes_to_withdraw:
-        cmd = "withdraw route {} next-hop 192.18.66.66 community [no-export {}:{}]".format(prefix, config['asn'], config['bh_community'])
+        cmd = "withdraw route {} next-hop 198.18.66.66 community [no-export {}:{}]".format(prefix, config['asn'], config['bh_community'])
         print(cmd)
 
     eprint("updates have been sent to exabgp.")
